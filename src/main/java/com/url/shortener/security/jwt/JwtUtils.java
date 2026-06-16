@@ -1,6 +1,7 @@
 package com.url.shortener.security.jwt;
 
 import com.url.shortener.service.UserDetailsImpl;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -56,8 +57,17 @@ public class JwtUtils {
     }
 
     public boolean validateToken(String authToken) {
-        Jwts.parser().verifyWith((SecretKey) key())
-                .build().parseSignedClaims(authToken);
-        return true;
+        try {
+            Jwts.parser().verifyWith((SecretKey) key())
+                    .build().parseSignedClaims(authToken);
+            return true;
+        } catch (JwtException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
