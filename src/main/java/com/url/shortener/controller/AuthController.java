@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 @AllArgsConstructor
 public class AuthController {
     private UserService userService;
@@ -22,6 +22,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
+        user.setEmail(registerRequest.getEmail());
         user.setRole("ROLE_USER");
         userService.registerUser(user);
         return ResponseEntity.ok("User Registered successfully");
