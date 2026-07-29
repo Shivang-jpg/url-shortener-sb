@@ -1,13 +1,12 @@
 package com.url.shortener.security.jwt;
 
-import com.url.shortener.service.UserDetailsImpl;
+import com.url.shortener.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -31,7 +30,7 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateToken(UserDetailsImpl userDetails) {
+    public String generateToken(@org.jetbrains.annotations.UnknownNullability UserDetailsServiceImpl userDetails) {
         String username = userDetails.getUsername();
         String roles = userDetails.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())

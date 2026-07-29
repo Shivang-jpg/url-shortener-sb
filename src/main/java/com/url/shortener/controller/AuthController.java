@@ -1,7 +1,9 @@
 package com.url.shortener.controller;
 
+import com.url.shortener.dtos.LoginRequest;
 import com.url.shortener.dtos.RegisterRequest;
 import com.url.shortener.models.User;
+import com.url.shortener.security.jwt.JwtAuthenticationResponse;
 import com.url.shortener.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @AllArgsConstructor
 public class AuthController {
+
     private UserService userService;
+
+    @PostMapping("/public/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest)
+    {
+       return ResponseEntity.ok(userService.authenticateUser(loginRequest));
+    }
+
     @PostMapping("/public/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest)
     {
