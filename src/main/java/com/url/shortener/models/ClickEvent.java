@@ -3,7 +3,6 @@ package com.url.shortener.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.naming.Name;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,5 +15,5 @@ public class ClickEvent {
 
     @ManyToOne
     @JoinColumn(name = "url_mapping_id")
-    private Url_Mapping urlMapping;
+    private UrlMapping urlMapping;
 }

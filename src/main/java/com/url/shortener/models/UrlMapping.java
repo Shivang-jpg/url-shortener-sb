@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Url_Mapping {
+public class UrlMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.url.shortener.security.jwt;
 
+import com.url.shortener.service.UserDetailsImpl;
 import com.url.shortener.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -30,7 +31,7 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateToken(@org.jetbrains.annotations.UnknownNullability UserDetailsServiceImpl userDetails) {
+    public String generateToken(UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         String roles = userDetails.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())
