@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/apis/urls")
+@RequestMapping("/api/urls")
 @AllArgsConstructor
 public class UrlMappingController {
     private UrlMappingService urlMappingService;
