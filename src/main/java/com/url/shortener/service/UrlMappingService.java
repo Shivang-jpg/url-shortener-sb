@@ -30,10 +30,10 @@ public class UrlMappingService {
     private UrlMappingDTO convertToDTO(UrlMapping urlMapping) {
         UrlMappingDTO urlMappingDTO = new UrlMappingDTO();
         urlMappingDTO.setId(urlMappingDTO.getId());
-        urlMappingDTO.setOriginalUrl(urlMappingDTO.getOriginalUrl());
-        urlMappingDTO.setShortUrl(urlMappingDTO.getShortUrl());
+        urlMappingDTO.setOriginalUrl(urlMapping.getOriginalUrl());
+        urlMappingDTO.setShortUrl(urlMapping.getShortUrl());
         urlMappingDTO.setClickCount(urlMapping.getClickCount());
-        urlMappingDTO.setCreatedDate(urlMappingDTO.getCreatedDate());
+        urlMappingDTO.setCreatedDate(urlMapping.getCreatedAt());
         urlMappingDTO.setUsername(urlMapping.getUser().getUsername());
         return urlMappingDTO;
     }
