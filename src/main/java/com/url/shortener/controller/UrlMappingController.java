@@ -23,12 +23,13 @@ public class UrlMappingController {
     private UserService userService;
     // {"originalUrl":"https://example.com"}
     @PostMapping("/shorten")
-    @PreAuthorize("hasRole('User')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UrlMappingDTO> createShortUrl(@RequestBody Map<String,String> request, Principal principal)
     {
         String originalUrl = request.get("originalUrl");
         User user = userService.findByUsername(principal.getName());
         UrlMappingDTO urlMappingDTO = urlMappingService.createShortUrl(originalUrl,user);
+        System.out.println("DEBUG: " + urlMappingDTO);
         return ResponseEntity.ok(urlMappingDTO);
     }
 }
