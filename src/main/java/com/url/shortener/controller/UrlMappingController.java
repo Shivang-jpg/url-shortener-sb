@@ -6,6 +6,7 @@ import com.url.shortener.service.UrlMappingService;
 import com.url.shortener.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,14 @@ import java.util.Map;
 public class UrlMappingController {
     private UrlMappingService urlMappingService;
     private UserService userService;
-
+    // {"originalUrl":"https://example.com"}
     @PostMapping("/shorten")
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<UrlMappingDTO> createShortUrl(@RequestBody Map<String,String> request, Principal principal)
     {
         String OriginalUrl = request.get("OriginalUrl");
         User user = userService.findByUsername(principal.getName());
         UrlMappingDTO urlMappingDTO = urlMappingService.createShortUrl(OriginalUrl,user);
-        return new ResponseEntity.ok(urlMappingDTO);
+        return ResponseEntity.ok(urlMappingDTO);
     }
 }
