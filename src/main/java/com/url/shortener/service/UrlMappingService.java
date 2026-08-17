@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +29,6 @@ public class UrlMappingService {
         UrlMapping urlMapping = new UrlMapping();
         urlMapping.setOriginalUrl(originalUrl);
         urlMapping.setUser(user);
-        urlMapping.setOriginalUrl(originalUrl);
         urlMapping.setShortUrl(shortURl);
         urlMapping.setCreatedAt(LocalDateTime.now());
         UrlMapping savedUrlMapping = urlMappingRepository.save(urlMapping);
@@ -49,12 +49,19 @@ public class UrlMappingService {
     private String generateShortUrl() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
-        StringBuilder shortURl = new StringBuilder(8);
-
-        for (int i = 0; i < 8; i++) {
-            shortURl.append(characters.charAt(random.nextInt(characters.length())));
+        // CHANGED: wrapped generation in a loop that retries until a unique
+        // short URL is found, to avoid collisions overwriting/colliding with
+        // an existing UrlMapping row
+        String candidate;
+        do {
+            StringBuilder shortURl = new StringBuilder(8);
+            for (int i = 0; i < 8; i++) {
+                shortURl.append(characters.charAt(random.nextInt(characters.length())));
+            }
+            candidate = shortURl.toString();
         }
-        return shortURl.toString();
+        while (urlMappingRepository.findByShortUrl(candidate) != null);
+        return candidate;
     }
 
     public List<UrlMappingDTO> getUrlsByUser(User user) {
@@ -63,9 +70,13 @@ public class UrlMappingService {
                 .toList();
     }
 
-    public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end) {
+    public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end, User user) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
-        if (urlMapping != null) {
+        // CHANGED: combined null-check and ownership-check into a single guard clause;
+        if (urlMapping == null || !urlMapping.getUser().getId().equals(user.getId())) {
+            return Collections.emptyList();
+        }
+        {
             return clickEventRepository.findByUrlMappingAndClickDateBetween(urlMapping, start, end).stream()
                     .collect(Collectors.groupingBy(click -> click.getClickDate().toLocalDate(), Collectors.counting()))
                     .entrySet().stream()
@@ -78,7 +89,6 @@ public class UrlMappingService {
                     })
                     .collect(Collectors.toList());
         }
-        return null;
     }
 
     public Map<LocalDate, Long> getTotalClicksByUserAndDate(User user, LocalDate start, LocalDate end) {
