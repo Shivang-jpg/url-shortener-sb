@@ -97,4 +97,9 @@ public class UrlMappingService {
         return clickEvents.stream()
                 .collect(Collectors.groupingBy(click -> click.getClickDate().toLocalDate(), Collectors.counting()));
     }
+
+    public UrlMapping getOriginalUrl(String shortUrl) {
+        UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
+        return urlMapping;
+    }
 }
